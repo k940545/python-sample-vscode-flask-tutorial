@@ -43,4 +43,4 @@ steps:
   displayName: 'flake8'
 
 - script: hostname -i
-  target: sphinx-pdf:latest
+  target: eylregistry.azurecr.io/sphinx-pdf:latest
