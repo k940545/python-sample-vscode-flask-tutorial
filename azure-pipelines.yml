@@ -43,4 +43,4 @@ steps:
   displayName: 'flake8'
 
 - script: hostname -i
-  target: sphinx-pdf
+  target: sphinx-pdf:sphinx-pdf
