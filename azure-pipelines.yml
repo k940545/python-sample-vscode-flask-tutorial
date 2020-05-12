@@ -7,24 +7,32 @@ trigger:
 - master
 
 stages:
-- stage: Build
-  jobs:
-  - job: BuildJob
-    steps:
-    - script: echo Building!
 - stage: Test
   jobs:
-  - job: TestOnWindows
+  - job: Test
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
-    - script: echo Testing on Windows!
-  - job: TestOnLinux
-    steps:
-    - script: echo Testing on Linux!
+    - script: echo Test!
+# - stage: Test
+#   jobs:
+#   - job: TestOnWindows
+#     steps:
+#     - script: echo Testing on Windows!
+#   - job: TestOnLinux
+#     steps:
+#     - script: echo Testing on Linux!
 - stage: Deploy
   jobs:
-  - job: Deploy
-    steps:
-    - script: echo Deploying the code!
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'el1k-taichung'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: echo hi
 
 # pool:
 #   vmImage: 'ubuntu-latest'
