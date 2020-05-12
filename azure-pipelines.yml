@@ -6,41 +6,61 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-strategy:
-  matrix:
-    Python27:
-      python.version: '2.7'
-    # Python35:
-    #   python.version: '3.5'
-    # Python36:
-    #   python.version: '3.6'
-    # Python37:
-    #   python.version: '3.7'
-# container:
-#   image: eylregistry.azurecr.io/sphinx-pdf:latest
-#   endpoint: eylregistry  
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: echo Building!
+- stage: Test
+  jobs:
+  - job: TestOnWindows
+    steps:
+    - script: echo Testing on Windows!
+  - job: TestOnLinux
+    steps:
+    - script: echo Testing on Linux!
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    steps:
+    - script: echo Deploying the code!
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+# pool:
+#   vmImage: 'ubuntu-latest'
+# strategy:
+#   matrix:
+#     Python27:
+#       python.version: '2.7'
+#     # Python35:
+#     #   python.version: '3.5'
+#     # Python36:
+#     #   python.version: '3.6'
+#     # Python37:
+#     #   python.version: '3.7'
+# # container:
+# #   image: eylregistry.azurecr.io/sphinx-pdf:latest
+# #   endpoint: eylregistry  
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+# steps:
+# - task: UsePythonVersion@0
+#   inputs:
+#     versionSpec: '$(python.version)'
+#   displayName: 'Use Python $(python.version)'
 
 # - script: |
-#     pip install pytest pytest-azurepipelines
-#     pytest
-#   displayName: 'pytest'
+#     python -m pip install --upgrade pip
+#     pip install -r requirements.txt
+#   displayName: 'Install dependencies'
 
-- script: |
-    flake8 --ignore=C901,E113,E128,E116,E402,E711,E731,E401,E501,W503,W293,W391,F401,E722 .
-  displayName: 'flake8'
+# # - script: |
+# #     pip install pytest pytest-azurepipelines
+# #     pytest
+# #   displayName: 'pytest'
 
-# - script: hostname -i
-#   target: eylregistry.azurecr.io/sphinx-pdf:latest
+# - script: |
+#     flake8 --ignore=C901,E113,E128,E116,E402,E711,E731,E401,E501,W503,W293,W391,F401,E722 .
+#   displayName: 'flake8'
+
+# # - script: hostname -i
+# #   target: eylregistry.azurecr.io/sphinx-pdf:latest
