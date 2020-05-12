@@ -18,9 +18,9 @@ strategy:
     #   python.version: '3.6'
     # Python37:
     #   python.version: '3.7'
-container:
-  image: eylregistry.azurecr.io/sphinx-pdf:latest
-  endpoint: eylregistry  
+# container:
+#   image: eylregistry.azurecr.io/sphinx-pdf:latest
+#   endpoint: eylregistry  
 
 steps:
 - task: UsePythonVersion@0
@@ -42,5 +42,5 @@ steps:
     flake8 --ignore=C901,E113,E128,E116,E402,E711,E731,E401,E501,W503,W293,W391,F401,E722 .
   displayName: 'flake8'
 
-- script: hostname -i
-  target: eylregistry.azurecr.io/sphinx-pdf:latest
+# - script: hostname -i
+#   target: eylregistry.azurecr.io/sphinx-pdf:latest
