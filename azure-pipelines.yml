@@ -19,7 +19,7 @@ strategy:
     # Python37:
     #   python.version: '3.7'
 container:
-  image: eylregistry.azurecr.io/sphinx-pdf
+  image: eylregistry.azurecr.io/sphinx-pdf:latest
   endpoint: eylregistry  
 
 steps:
