@@ -14,20 +14,23 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - script: echo Test!
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
+      displayName: 'Upload package'
+      artifact: drop
     - script: |
         echo hi
         ls -l
         pwd
         hostname -i
         uname -r
-# - stage: Test
-#   jobs:
-#   - job: TestOnWindows
-#     steps:
-#     - script: echo Testing on Windows!
-#   - job: TestOnLinux
-#     steps:
-#     - script: echo Testing on Linux!
+
 - stage: Deploy
   jobs:
   - deployment: Deploy
@@ -44,6 +47,19 @@ stages:
                 pwd
                 hostname -i
                 uname -r
+            - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.x'
+                addToPath: true
+                architecture: 'x64'
+
+            - task: AzureWebApp@1
+              inputs:
+                azureSubscription: 'eyelan'
+                appType: 'webAppLinux'
+                appName: 'flask_test'
+                package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                startUpCommand: '''gunicorn --bind=0.0.0.0 --workers=4 startup:app'''
 
 # pool:
 #   vmImage: 'ubuntu-latest'
