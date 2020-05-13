@@ -34,9 +34,10 @@ stages:
 - stage: Deploy
   jobs:
   - deployment: Deploy
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'el1k-taichung'
+    environment: 
+      name: 'el1k-taichung'
+      resourceType: VirtualMachine
+      tags: 'test'
     strategy:
       runOnce:
         deploy:
@@ -53,13 +54,15 @@ stages:
                 addToPath: true
                 architecture: 'x64'
 
-            - task: AzureWebApp@1
-              inputs:
-                azureSubscription: 'eyelan'
-                appType: 'webAppLinux'
-                appName: 'flask_test'
-                package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-                startUpCommand: '''gunicorn --bind=0.0.0.0 --workers=4 startup:app'''
+
+
+            # - task: AzureWebApp@1
+            #   inputs:
+            #     azureSubscription: 'eyelan'
+            #     appType: 'webAppLinux'
+            #     appName: 'flask_test'
+            #     package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+            #     startUpCommand: '''gunicorn --bind=0.0.0.0 --workers=4 startup:app'''
 
 # pool:
 #   vmImage: 'ubuntu-latest'
