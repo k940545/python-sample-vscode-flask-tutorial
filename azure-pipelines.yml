@@ -14,14 +14,22 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - script: echo Test!
+    # - task: ArchiveFiles@2
+    #   inputs:
+    #     rootFolderOrFile: '$(Build.SourcesDirectory)'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    #     replaceExistingArchive: true
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)'
         includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+        archiveType: 'tar'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz'
         replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
+        verbose: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz
       displayName: 'Upload package'
       artifact: drop
     - script: |
@@ -42,20 +50,18 @@ stages:
       runOnce:
         deploy:
           steps:
+            - task: ExtractFiles@1
+              inputs:
+                archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz'
+                destinationFolder: '$(Build.SourcesDirectory)'
+                cleanDestinationFolder: false
             - script: |
                 echo hi
                 ls -l
                 pwd
                 hostname -i
                 uname -r
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.x'
-                addToPath: true
-                architecture: 'x64'
-
-
-
+            
             # - task: AzureWebApp@1
             #   inputs:
             #     azureSubscription: 'eyelan'
