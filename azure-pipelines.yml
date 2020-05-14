@@ -31,8 +31,7 @@ stages:
         verbose: true
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)'
-        artifact: '$(Build.BuildId).tgz'
+        targetPath: '$(Pipeline.Workspace)/$(Build.BuildId).tgz'
         publishLocation: 'pipeline'
     # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz
     #   displayName: 'Upload package'
