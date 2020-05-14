@@ -29,9 +29,14 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz'
         replaceExistingArchive: true
         verbose: true
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz
-      displayName: 'Upload package'
-      artifact: drop
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: '$(Build.BuildId).tgz'
+        publishLocation: 'pipeline'
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz
+    #   displayName: 'Upload package'
+    #   artifact: drop
     - script: |
         echo hi
         ls -l
@@ -50,10 +55,14 @@ stages:
       runOnce:
         deploy:
           steps:
+            - script: |
+                echo $(Build.ArtifactStagingDirectory)
+                echo $(Pipeline.Workspace)
+              displayName: 'echo var'
             - task: ExtractFiles@1
               inputs:
-                archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tgz'
-                destinationFolder: '$(Build.SourcesDirectory)'
+                archiveFilePatterns: '$(Pipeline.Workspace)/$(Build.BuildId).tgz'
+                destinationFolder: '$(Pipeline.Workspace)'
                 cleanDestinationFolder: false
             - script: |
                 echo hi
